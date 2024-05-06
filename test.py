@@ -6,7 +6,7 @@ from keras.models import load_model
 class CharacterPredictor:
     def __init__(self, model_path):
         self.model = load_model(model_path)
-        self.original_size = 22
+        self.original_size = 20
         self.target_size = 28
 
     def refine_image(self, image):
