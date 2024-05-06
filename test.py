@@ -1,4 +1,4 @@
-import cv2
+import cv2 as cv
 import numpy as np
 import math
 from keras.models import load_model
@@ -21,7 +21,7 @@ class CharacterRecognizer:
         rows, cols = int(round(rows * factor)), int(round(cols * factor))
         
         # Redimensionar la imagen
-        resized_image = cv2.resize(image, (cols, rows))
+        resized_image = cv.resize(image, (cols, rows))
         
         cols_padding = (int(math.ceil((target_size - cols) / 2.0)), int(math.floor((target_size - cols) / 2.0)))
         rows_padding = (int(math.ceil((target_size - rows) / 2.0)), int(math.floor((target_size - rows) / 2.0)))
@@ -31,14 +31,14 @@ class CharacterRecognizer:
     
     def extract_and_refine(self, image, contour):
         """Extrae el contorno de la imagen y lo refina."""
-        x, y, w, h = cv2.boundingRect(contour)
+        x, y, w, h = cv.boundingRect(contour)
 
         # si el contorno es muy pequeño, ignorarlo
         if w < 10 or h < 40:
             return None
-        roi = cv2.bitwise_not(image[y:y+h, x:x+w])
+        roi = cv.bitwise_not(image[y:y+h, x:x+w])
         padded_img = self.refine_image(roi)
-        refined_image = cv2.transpose(padded_img)
+        refined_image = cv.transpose(padded_img)
         return refined_image
 
     def predict_character(self, image):
@@ -49,10 +49,10 @@ class CharacterRecognizer:
 
     def process_image(self, path):
         """Procesa una imagen completa y devuelve la cadena de caracteres reconocidos."""
-        image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-        _, thresh = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-        contours_index = sorted(enumerate(contours), key=lambda c: cv2.boundingRect(c[1])[0])
+        image = cv.imread(path, cv.IMREAD_GRAYSCALE)
+        _, thresh = cv.threshold(image, 127, 255, cv.THRESH_BINARY)
+        contours, hierarchy = cv.findContours(thresh, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
+        contours_index = sorted(enumerate(contours), key=lambda c: cv.boundingRect(c[1])[0])
 
         predicted_chars = []
         for index, contour in contours_index:
@@ -64,10 +64,10 @@ class CharacterRecognizer:
                 predicted_char = self.predict_character(refined_image)
                 predicted_chars.append(predicted_char)
                 print(predicted_char)
-                cv2.imshow('Character', refined_image)
-                cv2.waitKey(1000)
+                cv.imshow('Character', refined_image)
+                cv.waitKey(1000)
 
-        cv2.destroyAllWindows()
+        cv.destroyAllWindows()
         return ''.join(filter(None, predicted_chars)) or "No words found"
 
 recognizer = CharacterRecognizer('models/saved_models/model.keras')
