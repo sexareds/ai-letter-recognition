@@ -64,11 +64,8 @@ class CharacterRecognizer:
                 predicted_char = self.predict_character(refined_image)
                 predicted_chars.append(predicted_char)
                 print(predicted_char)
-                cv.imshow('Character', refined_image)
-                cv.waitKey(1000)
 
-        cv.destroyAllWindows()
         return ''.join(filter(None, predicted_chars)) or "No words found"
 
-recognizer = CharacterRecognizer('models/saved_models/model.keras')
-print(f'La predicción es: {recognizer.process_image("test/z.png")}')
+# recognizer = CharacterRecognizer('models/saved_models/model.keras')
+# print(f'La predicción es: {recognizer.process_image("test/z.png")}')
