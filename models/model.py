@@ -30,13 +30,14 @@ def build_model(num_classes):
     """Build a Sequential neural network model."""
     model = models.Sequential([
         layers.Input(shape=(28, 28, 1)),
-        layers.Flatten(),                       # aplanar las imagenes
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.Flatten(),
         layers.Dense(128, activation='relu'),
-        layers.Dropout(0.2),
-        layers.Dense(128, activation='relu'),
-        layers.Dropout(0.2),
-        layers.Dense(128, activation='relu'),
-        layers.Dropout(0.2),
+        layers.Dropout(0.5),
         layers.Dense(num_classes, activation='softmax')
     ])
     return model
@@ -68,7 +69,7 @@ def main():
     
     early_stopping = EarlyStopping(patience=3, restore_best_weights=True)
     
-    history = model.fit(train_x, train_y, epochs=15, batch_size=64, validation_split=0.2, callbacks=[early_stopping])
+    history = model.fit(train_x, train_y, epochs=10, batch_size=64, validation_split=0.2, callbacks=[early_stopping])
     plot_history(history)
 
     # evaluacion del modelo con los datos de prueba
