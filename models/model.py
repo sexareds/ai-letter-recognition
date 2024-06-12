@@ -27,10 +27,9 @@ def preprocess_data(data):
     return x, y
 
 def build_model(num_classes):
-    """Build a Sequential neural network model."""
+    """Build a Convolutional Neural Network model."""
     model = models.Sequential([
-        layers.Input(shape=(28, 28, 1)),
-        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        layers.Conv2D(32, (3, 3), padding="same", activation='relu', input_shape=(28, 28, 1)),
         layers.MaxPooling2D((2, 2)),
         layers.Conv2D(64, (3, 3), activation='relu'),
         layers.MaxPooling2D((2, 2)),
