@@ -38,8 +38,6 @@ class CharacterRecognizer:
         x, y, w, h = cv.boundingRect(contour)
 
         # si el contorno es muy pequeño, ignorarlo
-        if w < 10 or h < 40:
-            return None
         roi = cv.bitwise_not(image[y:y+h, x:x+w])
         padded_img = self.refine_image(roi)
         refined_image = cv.transpose(padded_img)
